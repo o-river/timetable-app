@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>京王線 運行情報</title>
+  <link rel="stylesheet" href="style.css"/></head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="dia_m.js"></script>
+  <script type="text/javascript" src="chofu.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <!-- <link rel="manifest" href="site.webmanifest"> -->
+  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+<!-- Start your code here -->
+  <div class="timetable"> <!-- -->
+    <div class="title">
+      <div id="title"><span id="tstaname">調布</span>駅 <span id="tdirname"></span>発車標 <span id="tdayname" onclick="switchDay()"></span>  <span id="ntime">--:--</span> 現在</div>
+      <div id="processing"><span id="loading">-</span> <span id="autoref">-</span> </div>
+      <div id="status">-</div>
+      <div id="control">
+        <form name="Timeset" action="">
+          <input class="nm" type="number" name="Time" value="1722">
+          <input class="bt" type="button" value="R" onclick="dispall(String(Timeset.Time.value), STA)">
+          <input class="bt" type="button" value="N" onclick="dispall(GetNowTimeStr(), STA)">
+          <input class="bt" type="button" value="N+" onclick="dispall(TimePlusAlpha(Number(GetNowTimeStr()), Number(Timeset.alpha.value)), STA)">
+          <input class="bt" type="button" value="N-" onclick="dispall(TimePlusAlpha(Number(GetNowTimeStr()), Number(-1*Timeset.alpha.value)), STA)">
+          <input class="nm alpha" type="number" name="alpha" value="10">
+          <input class="bt" type="button" value="A"  onclick="autoRefreshOn()">
+          <input class="bt" type="button" value="A+" onclick="autoRefreshOn(Number(Timeset.alpha.value))">
+          <input class="bt" type="button" value="S"  onclick="autoRefreshOff()">
+          <input class="bt" type="button" value="sw" onclick="autoSwitchOff()">
+        </form>
+        <form name="Staset" action="">
+          <input class="nm" type="number" name="fsta" value="18">
+          <select class="fixing" name="fl">
+            <option value="L1" selected>L1</option>
+            <option value="L2">L2</option>
+            <option value="L3">L3</option>
+          </select>
+          <select class="fixing" name="fday">
+            <option value="Weekday" selected>平日</option>
+            <option value="Holiday">休日</option>
+          </select>
+          <select class="fixing" name="fud">
+            <option value="U" selected>上り</option>
+            <option value="D">下り</option>
+          </select>
+          <select class="fixing" name="fdir">
+            <option value="" selected>指定なし</option>
+            <option value="h">本線</option>
+            <option value="s">相模原線</option>
+            <option value="y">高尾線</option>
+            <option value="z">支線</option>
+          </select>
+          <input class="bt" type="button" value="STA" onclick="(function(){STA = Staset.fsta.value;})()">
+          <input class="bt" type="button" value="Cg1" onclick="setStationDev(Staset.fl.value, Staset.fday.value, Staset.fud.value, Number(Staset.fsta.value), Staset.fdir.value)">
+          <input class="bt" type="button" value="CgA" onclick="setStation(Staset.fsta.value)">
+          <input class="bt" type="button" name="refresh" value="🗘" onclick="location.reload(true)">
+          <input class="bt" type="button" name="refresh-1" value="-1" onclick='for(var i = 1; i < 4; i++){plusRows("L" + i , -1);}'>
+          <input class="bt" type="button" name="refresh+1" value="+1" onclick='for(var i = 1; i < 4; i++){plusRows("L" + i , 1);}'>
+          <input class="bt" type="button" name="nearstation" value="📍" onclick='setNearStation()'>
+          <a href="//a.opentidkeio.jp/data/traffic_info.json">json</a>
+        </form>
+      </div>
+    </div>
+
+    <div class="table-header sticky">
+      <div class="direction-header">
+        <div class="dir-name">方面</div>
+        <div class="dir-sta"></div>
+      </div>
+      <div class="train">
+        <div class="num">発順</div>
+        <div class="time">時　刻</div>
+        <div class="kind">種　別</div>
+        <div class="cars">両</div>
+        <div class="dest">行　先</div>
+        <div class="delay">遅</div>
+        <div class="info">備　考</div>
+      </div>
+    </div>
+
+    <div class="direction" id="L1">
+      <div class="direction-header" onclick="switchRow('L1')">
+        <div class="dir-name"></div>
+        <div class="dir-sta"></div>
+      </div>
+      <div class="trains">
+        <div class="train">
+          <div class="num">1</div>
+          <div class="time">00:00</div>
+          <div class="cars">00</div>
+          <div class="dest">行き先</div>
+          <div class="dep">始発</div>
+          <div class="csta">変更駅</div>
+          <div class="kara">から</div>
+          <div class="cknd">種別</div>
+          <div class="kind">種別</div>
+          <div class="delay">+00</div>
+          <div class="info">info</div>
+        </div>
+        <div class="train">
+          <div class="num">2</div>
+          <div class="time"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="cars"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">3</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">4</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">5</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="direction" id="L2">
+      <div class="direction-header"  onclick="switchRow('L2')">
+        <div class="dir-name"></div>
+        <div class="dir-sta"></div>
+      </div>
+      <div class="trains">
+        <div class="train">
+          <div class="num">1</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">2</div>
+          <div class="time"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="cars"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">3</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">4</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">5</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="direction" id="L3">
+      <div class="direction-header"  onclick="switchRow('L3')">
+        <div class="dir-name"></div>
+        <div class="dir-sta"></div>
+      </div>
+      <div class="trains">
+        <div class="train">
+          <div class="num">1</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">2</div>
+          <div class="time"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="cars"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">3</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">4</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+        <div class="train">
+          <div class="num">5</div>
+          <div class="time"></div>
+          <div class="cars"></div>
+          <div class="dest"></div>
+          <div class="dep"></div>
+          <div class="csta"></div>
+          <div class="kara">から</div>
+          <div class="cknd"></div>
+          <div class="kind"></div>
+          <div class="delay"></div>
+          <div class="info"></div>
+        </div>
+      </div>    </div>
+  </div>
+  <div style="height: 20rem;"
+</body>
+</html>
