@@ -74,7 +74,7 @@ function twoDimArray2json(array){ //受け取るのは先頭行データ付き�
     // カンマで区切られた各データに分割する
     var arrayD = array[i];
     //// 各データをループ処理する
-    console.log("i=" + i + ", items = " + items.length + "; arrayD = " + arrayD.length);
+//    console.log("i=" + i + ", items = " + items.length + "; arrayD = " + arrayD.length);
 //    if(i > array.length - 5) {console.log(i); console.log(arrayD);}
 //    if(items.length != arrayD.length) console.log(arrayD);
     for (var j = 0; j < items.length; j++) {
