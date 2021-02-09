@@ -57,13 +57,6 @@ stations = ["新線新宿","新宿","初台","幡ヶ谷","笹塚","代田橋","�
             "府中競馬正門前","多摩動物公園","京王片倉","山田","めじろ台","狭間","高尾","高尾山口"];
 */
 
-getCSVSta("stations.csv");
-
-getCSVDia("dia_w_u.csv", "Weekday", "U");
-getCSVDia("dia_w_d.csv", "Weekday", "D");
-getCSVDia("dia_h_u.csv", "Holiday", "U");
-getCSVDia("dia_h_d.csv", "Holiday", "D");
-
 
 
 

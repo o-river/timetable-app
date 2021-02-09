@@ -91,6 +91,13 @@ function twoDimArray2json(array){ //受け取るのは先頭行データ付き�
   return jsonArray;
 }
 
+getCSVSta("stations.csv");
+
+getCSVDia("dia_w_u.csv", "Weekday", "U");
+getCSVDia("dia_w_d.csv", "Weekday", "D");
+getCSVDia("dia_h_u.csv", "Holiday", "U");
+getCSVDia("dia_h_d.csv", "Holiday", "D");
+
 
 //keioの駅探時刻表から平日・土休日を取得し返す関数
 function getTrainDay(date) {
