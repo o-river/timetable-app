@@ -1,4 +1,5 @@
-
+// chofu.js メインJSファイル
+// 役割：
 
 const SWintv = 2500;
 const SWtimes = 2;
@@ -16,15 +17,6 @@ for (const id of LineIDs) {
 var DAY = "";
 var STA = Number(localStorage.DefaultStaNum);
 var LineIDDir = {L1:"",L2:"",L3:""};
-
-//以下のl_は将来的にはいらない
-l_time = [];
-l_kind = [];
-l_dest = [];
-l_cars = [];
-l_dep  = [];
-l_info = [];
-l_delay = [];
 
 now_i = {L1:1, L2:1, L3:1};
 t_cnt = 0;
