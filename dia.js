@@ -8,7 +8,7 @@ function CSVDia2json(day, dir) {
   console.log("day=" + day +", dir=" + dir + "; rawdia:");
   console.log(rawdia[day][dir]);
 }
-function CSV2json() {
+function CSVSta2json() {
   stations = twoDimArray2json(CSV2Array(this.responseText));
   console.log("stations data:");
   console.log(stations);
@@ -17,7 +17,7 @@ function getCSVDia(filename, day, dir) {
   getCSV(filename, CSVDia2json, day, dir);
 }
 function getCSVSta(filename) {
-  getCSV(filename, CSV2json);
+  getCSV(filename, CSVSta2json);
 }
 
 
@@ -61,9 +61,6 @@ function twoDimArray2json(array){ //受け取るのは先頭行データ付き�
   // 1行目から「項目名」の配列を生成する
   var items = array[0];　//項目名の配列items
   items[items.length-1] = items[items.length-1].replace("\r", ''); //最終要素の改行を取る
-
-  // console.log("items[i]:");
-  // for (var i = 0; i < items.length; i++) { console.log(items[i]); }
 
   // CSVデータの配列の各行をループ処理する
   //// 配列の先頭要素(行)は項目名のため処理対象外

@@ -50,15 +50,6 @@ detail = {
 rawdia = {Weekday:{U:[],D:[]}, Holiday:{U:[],D:[]}};
 dia = {Weekday:{L1:[],L2:[],L3:[]}, Holiday:{L1:[],L2:[],L3:[]}};
 
-/*
-stations = ["新線新宿","新宿","初台","幡ヶ谷","笹塚","代田橋","明大前","下高井戸","桜上水","上北沢","八幡山","芦花公園","千歳烏山","仙川","つつじヶ丘","柴崎","国領","布田","調布",
-            "西調布","飛田給","武蔵野台","多磨霊園","東府中","府中","分倍河原","中河原","聖蹟桜ヶ丘","百草園","高幡不動","南平","平山城址公園","長沼","北野","京王八王子",
-            "京王多摩川","京王稲田堤","京王よみうりランド","稲城","若葉台","京王永山","京王多摩センター","京王堀之内","南大沢","多摩境","橋本",
-            "府中競馬正門前","多摩動物公園","京王片倉","山田","めじろ台","狭間","高尾","高尾山口"];
-*/
-
-
-
 
 function makeTimetable(id = "L1", day = DAY, ud, sta, dir = ""){
   if(ud != ""){
@@ -107,10 +98,6 @@ window.onload = function(){
   var dayname = document.getElementById('tdayname');
   var loading = document.getElementById('loading');
   date.setHours(date.getHours() - 3); //３時で曜日を切り替えるようにした
-/*  if(date.getDay() == 0
-     || (date.getDay() == 6 && date.getHours() > 3)
-     || (date.getDay() == 1 && date.getHours() <= 3)) {
-     */
   console.log("today: ");
   console.log(date);
   switch (date.getDay()) {
@@ -128,8 +115,6 @@ window.onload = function(){
     dayname.innerHTML = "休日";
   }
   console.log(DAY);
-  //dateStr = date.getFullYear() + String(date.getMonth() + 1) + date.getDate();
-  //getTrainDay(datestr);
 
 
   for (const id of LineIDs) {
@@ -468,21 +453,6 @@ function display(LineID, nowtime, sta, DispNum = 3) {
     return;
   }
 
-// for (item of TrainDetails) {
-//   for (var i = 0; i < DispNum[LineID]; i++){
-//     l_data[item][i] = document.getElementById(LineID).getElementsByClassName('l' + (i+1) + ' ' + item)[0];
-//   }
-// }
-  // for (var i = 0; i < 3; i++) {
-  //   l_time[i]  = document.getElementById(LineID).getElementsByClassName('train')[i].getElementsByClassName('time')[0];
-  //   l_kind[i]  = document.getElementById(LineID).getElementsByClassName('train')[i].getElementsByClassName('kind')[0];
-  //   l_dest[i]  = document.getElementById(LineID).getElementsByClassName('train')[i].getElementsByClassName('dest')[0];
-  //   l_cars[i]  = document.getElementById(LineID).getElementsByClassName('train')[i].getElementsByClassName('cars')[0];
-  //   l_dep[i]   = document.getElementById(LineID).getElementsByClassName('train')[i].getElementsByClassName('dep')[0];
-  //   l_info[i]  = document.getElementById(LineID).getElementsByClassName('train')[i].getElementsByClassName('info')[0];
-  //   l_delay[i] = document.getElementById(LineID).getElementsByClassName('train')[i].getElementsByClassName('delay')[0];
-  // }
-
   document.getElementById(LineID).getElementsByClassName('dir-name')[0].innerHTML = stations[sta][LineID + "name"];
   document.getElementById(LineID).getElementsByClassName('dir-sta')[0].innerHTML = stations[sta][LineID + "info"];
 
@@ -542,61 +512,7 @@ function display(LineID, nowtime, sta, DispNum = 3) {
             d_tnum[LineID][1] = null;
           }
         }
-//
-/*
-        if(i < dia[DAY][LineID].length){
-          console.log("1st: " + EditTime(dia[DAY][LineID][i].Time));
-          l_time[0].innerHTML = EditTime(dia[DAY][LineID][i].Time);
-          l_kind[0].innerHTML = KindStr(dia[DAY][LineID][i].Kind);
-          l_kind[0].style.backgroundColor = KindBColor(dia[DAY][LineID][i].Kind);
-          l_dest[0].innerHTML = PressWidth(dia[DAY][LineID][i].Destination, 5);
-          l_cars[0].innerHTML = dia[DAY][LineID][i].Cars;
-          l_dep[0].innerHTML = dia[DAY][LineID][i].IsDep;
-          // l_info[0].innerHTML = dia[DAY][LineID][i].Info;
-          l_info[0].innerHTML = (i) + "; " + dia[DAY][LineID][i].TrainNum + ": " + dia[DAY][LineID][i].Info;
-          l_delay[0].innerHTML = getDelay(dia[DAY][LineID][i].TrainNum);
-          d_tnum[LineID][0] = i;
-        }
 
-        if(i+1 < dia[DAY][LineID].length){
-          console.log("2nd: " + EditTime(dia[DAY][LineID][i+1].Time));
-          l_time[1].innerHTML = EditTime(dia[DAY][LineID][i+1].Time);
-          l_kind[1].innerHTML = KindStr(dia[DAY][LineID][i+1].Kind);
-          l_kind[1].style.backgroundColor = KindBColor(dia[DAY][LineID][i+1].Kind);
-          l_dest[1].innerHTML = PressWidth(dia[DAY][LineID][i+1].Destination, 5);
-          l_cars[1].innerHTML = dia[DAY][LineID][i+1].Cars;
-          l_dep[1].innerHTML = dia[DAY][LineID][i+1].IsDep;
-          // l_info[1].innerHTML = dia[DAY][LineID][i+1].Info;
-          l_info[1].innerHTML = (i+1) + "; " + dia[DAY][LineID][i+1].TrainNum + ": " + dia[DAY][LineID][i+1].Info;
-          l_delay[1].innerHTML = getDelay(dia[DAY][LineID][i+1].TrainNum);
-          d_tnum[LineID][1] = i+1;
-        } else {
-          l_time[1].innerHTML = " "; l_kind[1].innerHTML = " "; l_kind[1].style.backgroundColor = "#222"; l_dest[1].innerHTML = " ";
-          l_cars[1].innerHTML = ""; l_delay[1].innerHTML = ""; l_dep[1].innerHTML = "";
-          l_info[1].innerHTML = "";
-          d_tnum[LineID][1] = null;
-        }
-
-        if(i+2 < dia[DAY][LineID].length){
-          console.log("3rd: " + EditTime(dia[DAY][LineID][i+2].Time));
-          l_time[2].innerHTML = EditTime(dia[DAY][LineID][i+2].Time);
-          l_kind[2].innerHTML = KindStr(dia[DAY][LineID][i+2].Kind);
-          l_kind[2].style.backgroundColor = KindBColor(dia[DAY][LineID][i+2].Kind);
-          l_dest[2].innerHTML = PressWidth(dia[DAY][LineID][i+2].Destination, 5);
-          l_cars[2].innerHTML = dia[DAY][LineID][i+2].Cars;
-          l_dep[2].innerHTML = dia[DAY][LineID][i+2].IsDep;
-          // l_info[2].innerHTML = dia[DAY][LineID][i+2].Info;
-          l_info[2].innerHTML = (i+2) + "; " + dia[DAY][LineID][i+2].TrainNum + ": " + dia[DAY][LineID][i+2].Info;
-          l_delay[2].innerHTML = getDelay(dia[DAY][LineID][i+2].TrainNum);
-          d_tnum[LineID][2] = i+2;
-        } else {
-          l_time[2].innerHTML = ""; l_kind[2].innerHTML = ""; l_kind[2].style.backgroundColor = "#222"; l_dest[2].innerHTML = "";
-          l_cars[2].innerHTML = ""; l_delay[2].innerHTML = ""; l_dep[2].innerHTML = "";
-          l_info[2].innerHTML = "";
-          d_tnum[LineID][2] = null;
-        }
-        i = 1;
-*/
         break;
       }else {
         i++;
@@ -677,7 +593,3 @@ function autoSwitchOff(){
   clearInterval(asw);
   document.getElementById("autoref").innerHTML = "自動表示切替OFF";
 }
-// fixedtodo 50分を超えたときalphaがex)1869などになって動かない不具合
-// fixedTODO: 終電後の(値がないことによる)取得エラーデバッグ
-// TODO: 遅延取得・表示
-// TODO: 始発表示
